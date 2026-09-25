@@ -3,7 +3,7 @@
 ## Learning Goals
 
 - Implement RESTful API endpoints using Flask.
-- Handle HTTP POST, PATCH, and DELETE methods to manage resource data.
+- Handle HTTP GET, POST, PATCH, and DELETE methods to manage resource data.
 - Accept and process JSON input using `request.get_json()`.
 - Simulate persistent data using in-memory Python objects.
 - Follow RESTful route conventions and return structured JSON responses.
@@ -12,6 +12,7 @@
 
 In this lab, you will build a **Full CRUD API** to manage a list of events. The API will allow users to:
 
+- List events using `GET /events` and retrieve one event using `GET /events/<id>`
 - Create new events using `POST`
 - Update existing events using `PATCH`
 - Delete events using `DELETE`
@@ -125,6 +126,8 @@ Test your endpoints using Postman or curl:
 
 - `POST http://localhost:5000/events`
   - Body: `{ "title": "Hackathon" }`
+- `GET http://localhost:5000/events` to list all events
+- `GET http://localhost:5000/events/1` to retrieve one event
 - `PATCH http://localhost:5000/events/1`
   - Body: `{ "title": "Hackathon 2025" }`
 - `DELETE http://localhost:5000/events/2`
