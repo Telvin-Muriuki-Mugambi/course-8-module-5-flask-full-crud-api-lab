@@ -8,6 +8,27 @@ def reset_data():
     events.append(Event(1, "Tech Meetup"))
     events.append(Event(2, "Python Workshop"))
 
+def test_get_events():
+    client = app.test_client()
+    response = client.get("/events")
+    assert response.status_code == 200
+    assert response.get_json() == [
+        {"id": 1, "title": "Tech Meetup"},
+        {"id": 2, "title": "Python Workshop"},
+    ]
+
+def test_get_event():
+    client = app.test_client()
+    response = client.get("/events/1")
+    assert response.status_code == 200
+    assert response.get_json() == {"id": 1, "title": "Tech Meetup"}
+
+def test_get_event_not_found():
+    client = app.test_client()
+    response = client.get("/events/99")
+    assert response.status_code == 404
+    assert response.get_json() == {"error": "Event with id 99 was not found."}
+
 def test_create_event():
     client = app.test_client()
     response = client.post("/events", json={"title": "Hackathon"})
@@ -15,12 +36,24 @@ def test_create_event():
     data = response.get_json()
     assert "id" in data and data["title"] == "Hackathon"
 
+def test_create_event_requires_title():
+    client = app.test_client()
+    response = client.post("/events", json={})
+    assert response.status_code == 400
+    assert response.get_json() == {"error": "A non-empty title is required."}
+
 def test_update_event():
     client = app.test_client()
     response = client.patch("/events/1", json={"title": "Hackathon 2025"})
     assert response.status_code == 200
     data = response.get_json()
     assert data["title"] == "Hackathon 2025"
+
+def test_update_event_requires_title():
+    client = app.test_client()
+    response = client.patch("/events/1", json={})
+    assert response.status_code == 400
+    assert response.get_json() == {"error": "A non-empty title is required."}
 
 def test_update_event_not_found():
     client = app.test_client()
